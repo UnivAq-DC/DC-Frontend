@@ -3,41 +3,72 @@ import type { IProject } from "src/types/Project"
 import type { UserLogin, UserLoginResponse } from "src/types/User"
 import { axios } from "./axios"
 
-type BaseResponse = {
-    res: AxiosResponse
-}
-type BaseResponseError = BaseResponse &  {
+
+type BaseResponseError<E> = {
     ok: false
     error: Error
+    errorData?: E
+    req?: any
+    res?: AxiosResponse
+    code: number
 }
-type BaseResponseOk<T> = BaseResponse & {
+type BaseResponseOk<T> = {
     ok: true
+    res: AxiosResponse
     data: T
 }
-type Response<T> = Promise<BaseResponseOk<T> | BaseResponseError>
-export type ApiGetMethod<T> = () => Response<T>
-export type ApiGetRestMethod<T> = (urlParams: string) => Response<T>
-export type ApiPostMethod<T, P> = (data: P) => Response<T>
-export type ApiPostNoDataMethod<T> = () => Response<T>
+type ErrorResponse = any
+type Response<T, E = ErrorResponse> = Promise<BaseResponseOk<T> | BaseResponseError<E>>
+export type ApiGetMethod<T, E = ErrorResponse> = () => Response<T, E>
+export type ApiGetRestMethod<T, E = ErrorResponse> = (urlParams: string) => Response<T, E>
+export type ApiPostMethod<T, P, E = ErrorResponse> = (data: P) => Response<T, E>
+export type ApiPostNoDataMethod<T, E = ErrorResponse> = () => Response<T, E>
 
-class Api{
+class Api {
     //keep as anonymous function to preserve `this` context
-    getJson = async <T>(path: string) : Response<T> => {
-        const res = await axios.get(path)
-        try{
-            const data = res.data as T
-            return {ok: true, data, res}
-        }catch(e: any){
-            return {ok: false, error: e, res}
+    getJson = async <T, E = ErrorResponse>(path: string): Response<T, E> => {
+        try {
+            const res = await axios.get<T>(path)
+            return { ok: true, data: res.data, res }
+        } catch (e: any) {
+            if (e.response) {
+                return {
+                    ok: false,
+                    error: e,
+                    res: e.response,
+                    errorData: e.response.data as E,
+                    code: e.response.status
+                }
+            }
+            return {
+                ok: false,
+                error: e,
+                req: e.request,
+                code: 0
+            }
         }
     }
-    postJson = async <T, D>(path: string, data: D) : Response<T> => {
-        const res = await axios.post(path, data)
-        try{
+    postJson = async <T, D, E = ErrorResponse>(path: string, requestData: D): Response<T, E> => {
+        try {
+            const res = await axios.post(path, requestData)
             const data = res.data as T
-            return {ok: true, data, res}
-        }catch(e: any){
-            return {ok: false, error: e, res}
+            return { ok: true, data, res }
+        } catch (e: any) {
+            if (e.response) {
+                return {
+                    ok: false,
+                    error: e,
+                    res: e.response,
+                    errorData: e.response.data as E,
+                    code: e.response.status
+                }
+            }
+            return {
+                ok: false,
+                error: e,
+                req: e.request,
+                code: 0
+            }
         }
     }
     fetchProjects = async (): Response<IProject[]> => {
@@ -45,8 +76,10 @@ class Api{
     }
     loginUser = async (data: UserLogin): Response<UserLoginResponse> => {
         return this.postJson('login', data)
-    }   
-    
+    }
+    checkLogin = async (): Response<UserLoginResponse> => {
+        return this.getJson('status')
+    }
 }
 
 

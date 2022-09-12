@@ -12,9 +12,13 @@ type SerializedTheme = {
     },
     vars: {
         primary: ThemeProp
+        backgroundFlip: ThemeProp
+        layer: ThemeProp
         secondary: ThemeProp
         accent: ThemeProp
         background: ThemeProp
+        accent2: ThemeProp
+        accent3: ThemeProp
     }
 }
 type ThemeVars = keyof SerializedTheme["vars"]
@@ -23,10 +27,14 @@ export const BASE_THEME: SerializedTheme = {
         name: "base"
     },
     vars: {
-        primary: createThemeProp("primary", "#ff3e00"),
-        secondary: createThemeProp("secondary", "#03dac6"),
-        accent: createThemeProp("accent", "#03dac6"),
-        background: createThemeProp("background", "#121212")
+        background: createThemeProp("background", "#0F151B"),
+        backgroundFlip: createThemeProp("backgroundFlip", "#E2D4B7"),
+        primary: createThemeProp("primary", "#162A1D"),
+        secondary: createThemeProp("secondary", "#B33A3A"),
+        layer: createThemeProp("layer", "#1E2A35"),
+        accent: createThemeProp("accent", "#88FF00"),
+        accent2: createThemeProp("accent-2", "#B33A3A"),
+        accent3: createThemeProp("accent-3", "#1B998B"),
     }
 }
 function createThemeProp(name: string, value: string) {
@@ -39,7 +47,20 @@ function createThemeProp(name: string, value: string) {
 class Theme {
     private state: SerializedTheme
     constructor(theme?: SerializedTheme) {
-        this.state = cloneDeep(theme ?? BASE_THEME)
+        this.state = cloneDeep(BASE_THEME)
+        if (!theme) return
+        this.state.meta = { ...this.state.meta, ...theme.meta }
+        //sanitized input
+        Object.entries(theme.vars).forEach(([key, value]) => {
+            const propName = key as ThemeVars
+            if (!this.state.vars[propName]) return
+            const color = Color(value.value)
+            this.state.vars[propName] = {
+                ...this.state.vars[propName],
+                value: color.hex(),
+                text: color.isDark() ? "white" : "black"
+            }
+        })
     }
     get(name: ThemeVars) {
         return Color(this.state.vars[name].value)
@@ -51,8 +72,6 @@ class Theme {
 
 function createThemeStore() {
     const { subscribe, set, update } = writable<Theme>(new Theme());
-
-
     function setTheme(theme: SerializedTheme) {
         set(new Theme(theme))
     }
