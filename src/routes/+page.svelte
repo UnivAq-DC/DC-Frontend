@@ -1,7 +1,22 @@
+<script lang="ts">
+import cloneDeep from "lodash.clonedeep"
+import { BASE_THEME, theme } from "$stores/theme"
+
+</script>
+
 <div>
-    <h1>
+    <h1 style='background-color: var(--accent)'>
        Welcome to 4Lizzi
     </h1>
+    <button
+        on:click={() => {
+            const n = cloneDeep(BASE_THEME)
+            n.vars.accent.value = 'red'
+            theme.setTheme(n);
+        }}
+    >
+        Theme test
+    </button>
 </div>
 
 <style lang='scss'>

@@ -7,7 +7,7 @@ const config: UserConfig = {
 	},
 	plugins: [
 		sveltekit()
-	]
+	],
 };
 
 export default config;
