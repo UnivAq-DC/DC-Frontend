@@ -2,6 +2,11 @@
 	font-family: FiraCode-Regular;
 	src: url('/FiraCode-Regular.woff2') format('woff2');
 }
+:root{
+	--red-bg: rgb(193 81 92);
+	--red: rgb(242 75 91);
+	--green: #358a55;
+}
 * {
 	margin: 0;
 	padding: 0;
@@ -20,17 +25,42 @@ html {
 	display: flex;
 	flex-direction: column;
 	overflow-x: hidden;
+	background-color: var(--background);
+	color: var(--background-text);
 }
+
 a{
     text-decoration: none;
+	color: var(--accent);
 }
 
 input:disabled{
-	cursor: not-allowed !important;
-	filter: saturate(0.6)!important;
+	cursor: not-allowed;
 }
 #svelte {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+}
+
+.column{
+	display: flex;
+	flex-direction: column;
+}
+.row, .row-centered{
+	display: flex;
+	flex-direction: row;
+}
+.row-centered{
+	align-items: center;
+}
+.space-between{
+	justify-content: space-between;
+}
+.space-around{
+	justify-content: space-around;
+}
+.centered{
+	align-items: center;
+	justify-content: center;
 }

@@ -1,7 +1,5 @@
 <script type="ts">
 	import { beforeNavigate, afterNavigate } from "$app/navigation"
-	import { fly } from "svelte/transition"
-	export let refresh = ""
 	let status = ""
 	let timeout = setTimeout(() => {}, 0)
 	beforeNavigate(() => {
@@ -16,12 +14,8 @@
 	})
 </script>
 
-{#key refresh}
-	<div 
-        class={`progress ${status}`} 
-    />
-	<slot />
-{/key}
+<div class={`progress ${status}`} />
+<slot />
 
 <style lang="scss">
 	.progress {
@@ -29,7 +23,7 @@
 		width: 0%;
 		background-color: var(--accent-3);
 		position: absolute;
-        border-radius: 0.6rem;
+		border-radius: 0.6rem;
 		z-index: 1000;
 	}
 	.progress-70 {

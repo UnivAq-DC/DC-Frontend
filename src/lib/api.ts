@@ -17,7 +17,7 @@ type BaseResponseOk<T> = {
     res: AxiosResponse
     data: T
 }
-type ErrorResponse = any
+export type ErrorResponse = any
 type Response<T, E = ErrorResponse> = Promise<BaseResponseOk<T> | BaseResponseError<E>>
 export type ApiGetMethod<T, E = ErrorResponse> = () => Response<T, E>
 export type ApiGetRestMethod<T, E = ErrorResponse> = (urlParams: string) => Response<T, E>

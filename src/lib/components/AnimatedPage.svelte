@@ -1,13 +1,16 @@
 <script lang="ts">
 	import { fly, type FlyParams } from "svelte/transition"
-	export const flyParams: FlyParams = { x: -50, duration: 500 }
-	export const style: string = ''
+	export let flyParams: FlyParams = { x: -50, duration: 500 }
+	export let centered = false
+	export let style: string = ''
+	export let cropped: boolean = false
 </script>
 
 <div 
-	class="page cropped" 
+	class="page" 
 	in:fly={flyParams}
-	{style}
+	class:cropped={cropped}
+	style={(centered ? 'justify-content: center;' : '') + style}
 >
 	<slot />
 </div>

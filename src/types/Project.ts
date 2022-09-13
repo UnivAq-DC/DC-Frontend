@@ -9,4 +9,5 @@ export interface IProject{
     title: string
     description: string
     languages: Language[]
+    id: string
 }

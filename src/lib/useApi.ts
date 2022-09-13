@@ -1,23 +1,37 @@
 import { writable } from "svelte/store";
-import type { ApiGetMethod, ApiGetRestMethod, ApiPostMethod, ApiPostNoDataMethod } from "./api";
+import type { ApiGetMethod, ApiGetRestMethod, ApiPostMethod, ApiPostNoDataMethod, ErrorResponse } from "./api";
 
-type ResponseStore<T> = {
+type ResponseStore<T, E = ErrorResponse> = {
     loading: boolean
-    error: Error | null
+    error: E | null
     data: T | null
     ok: boolean
 }
+
 const EMPTY_RESPONSE = {
     loading: false,
     error: null,
     data: null,
     ok: false
 }
-export function useGetApi<T>(method: ApiGetMethod<T>, preFetch?: boolean) {
-    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE })
+
+type UseApiOptions<T, E = ErrorResponse> = {
+    autoFetch?: boolean
+    baseData?: T
+    onError?: (error: E | null) => void
+}
+
+type UseApiOptionsNoAutoFetch<T, E = ErrorResponse> = {
+    baseData?: T
+    onError?: (error: E | null) => void
+}
+
+export function useGetApi<T>(method: ApiGetMethod<T>, options?: UseApiOptions<T>) {
+    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE, data: options?.baseData ?? null })
     async function fetch() {
         update(v => ({ ...v, loading: true }))
         const res = await method()
+        if(!res.ok && options?.onError) options.onError(res.errorData)
         set({
             loading: false,
             error: res.ok ? null : res.error,
@@ -25,14 +39,15 @@ export function useGetApi<T>(method: ApiGetMethod<T>, preFetch?: boolean) {
             ok: res.ok
         })
     }
-    if (preFetch) fetch()
+    if (options?.autoFetch) fetch()
     return { subscribe, fetch }
 }
-export function useGetRestApi<T>(method: ApiGetRestMethod<T>, preFetch?: boolean) {
-    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE })
+export function useGetRestApi<T>(method: ApiGetRestMethod<T>, options?: UseApiOptions<T>) {
+    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE, data: options?.baseData ?? null })
     async function fetch(urlParams: string) {
         update(v => ({ ...v, loading: true }))
         const res = await method(urlParams)
+        if(!res.ok && options?.onError) options.onError(res.errorData)
         set({
             loading: false,
             error: res.ok ? null : res.error,
@@ -40,16 +55,18 @@ export function useGetRestApi<T>(method: ApiGetRestMethod<T>, preFetch?: boolean
             ok: res.ok
         })
     }
-    if (preFetch) fetch('')
+    if (options?.autoFetch) fetch('')
+
     return { subscribe, fetch }
 }
 
 
-export function usePostNoDataApi<T>(method: ApiPostNoDataMethod<T>) {
-    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE })
+export function usePostNoDataApi<T>(method: ApiPostNoDataMethod<T>, options?: UseApiOptions<T>) {
+    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE, data: options?.baseData ?? null })
     async function fetch() {
         update(v => ({ ...v, loading: true }))
         const res = await method()
+        if(!res.ok && options?.onError) options.onError(res.errorData)
         set({
             loading: false,
             error: res.ok ? null : res.error,
@@ -57,14 +74,16 @@ export function usePostNoDataApi<T>(method: ApiPostNoDataMethod<T>) {
             ok: res.ok
         })
     }
+    if (options?.autoFetch) fetch()
     return { subscribe, fetch }
 
 }
-export function usePostApi<T, D>(method: ApiPostMethod<T, D>) {
-    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE })
+export function usePostApi<T, D>(method: ApiPostMethod<T, D>, options?: UseApiOptionsNoAutoFetch<T>) {
+    const { subscribe, set, update } = writable<ResponseStore<T>>({ ...EMPTY_RESPONSE, data: options?.baseData ?? null })
     async function fetch(data: D) {
         update(v => ({ ...v, loading: true }))
         const res = await method(data)
+        if(!res.ok && options?.onError) options.onError(res.errorData)
         set({
             loading: false,
             error: res.ok ? null : res.error,

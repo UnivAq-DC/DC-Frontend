@@ -7,3 +7,4 @@ import AnimatedPage from "$lib/components/AnimatedPage.svelte";
 <AnimatedPage>
     Example project
 </AnimatedPage>
+
