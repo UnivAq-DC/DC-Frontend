@@ -19,7 +19,7 @@
 
 <style lang="scss">
 	.progress {
-		height: 0.3rem;
+		height: 0.2rem;
 		width: 0%;
 		background-color: var(--accent-3);
 		position: absolute;

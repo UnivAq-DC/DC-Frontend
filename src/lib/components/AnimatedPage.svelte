@@ -21,6 +21,8 @@
 		flex: 1;
 		flex-direction: column;
 		width: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	.cropped {
 		padding: 1rem 22vw;

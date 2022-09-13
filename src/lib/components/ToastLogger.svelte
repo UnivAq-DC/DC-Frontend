@@ -57,6 +57,7 @@
 		position: fixed;
 		right: 1rem;
 		top: 1rem;
+		z-index: 1000;
 		width: 20rem;
 	}
 	.toast-wrapper {
@@ -66,7 +67,6 @@
 		backdrop-filter: blur(3px);
 		border-radius: 0.4rem;
 		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-		z-index: 20;
 		transition: transform 0.3s ease-out;
 		animation: animateIn 0.3s ease-out;
 		flex-direction: column;

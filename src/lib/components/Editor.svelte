@@ -120,7 +120,6 @@
 		background-color: var(--background);
 		border-radius: 0.4rem;
 		animation: infinite 3s pulse ease-in-out;
-		position: absolute;
 	}
 	@keyframes pulse {
 		0% {

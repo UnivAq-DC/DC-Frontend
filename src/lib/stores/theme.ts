@@ -28,11 +28,11 @@ export const BASE_THEME: SerializedTheme = {
     },
     vars: {
         background: createThemeProp("background", "#0F151B"),
-        backgroundFlip: createThemeProp("backgroundFlip", "#E2D4B7"),
+        backgroundFlip: createThemeProp("background-flip", "#ddd5c5"),
         primary: createThemeProp("primary", "#19232d"),
         secondary: createThemeProp("secondary", "#B33A3A"),
         layer: createThemeProp("layer", "#1E2A35"),
-        accent: createThemeProp("accent", "#88FF00"),
+        accent: createThemeProp("accent", "#88d333"),
         accent2: createThemeProp("accent-2", "#B33A3A"),
         accent3: createThemeProp("accent-3", "#1B998B"),
     }
@@ -64,6 +64,14 @@ class Theme {
     }
     get(name: ThemeVars) {
         return Color(this.state.vars[name].value)
+    }
+    layer(name: ThemeVars, amount: number) {
+        const color = this.get(name)
+        if(color.isDark()){
+            return color.lighten(amount)
+        }else{
+            return color.darken(amount)
+        }
     }
     toArray() {
         return Object.values(this.state.vars)

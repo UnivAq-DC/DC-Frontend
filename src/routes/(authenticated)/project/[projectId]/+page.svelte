@@ -11,7 +11,7 @@
 		title: "Some title",
 		description: "some long description",
 		languages: [Language.C, Language.Python, Language.Cpp],
-		markdown: "some markdown",
+		markdown: "<b> some markdown </b>",
 		id: "1",
 	}
 	let userSubmission: UserSubmission = {
@@ -20,7 +20,7 @@
 	}
 </script>
 
-<AnimatedPage>
+<AnimatedPage style='position:relative;'>
 	<div class="project-grid">
 		<div class="editor-wrapper">
 			<Editor
@@ -29,18 +29,18 @@
 			/>
 		</div>
 		<div class="column prompt-wrapper">
-			<EditorProject />
+			<EditorProject bind:project />
 		</div>
 		<div class="row bottom-wrapper space-between">
 			<div class="row-centered">
-				Language
+				Linguaggio
 				<Select style="margin-left: 1rem">
 					{#each project.languages as language (language)}
 						<option value={language}>{language}</option>
 					{/each}
 				</Select>
 			</div>
-			<Button fancy>Submit</Button>
+			<Button fancy>Invia</Button>
 		</div>
 	</div>
 </AnimatedPage>
@@ -57,10 +57,10 @@
 			"e e p"
 			"b b p";
 		gap: 1rem;
-        @media (max-width: 900px) {
-            display: flex;
-            flex-direction: column;
-        }
+		@media (max-width: 900px) {
+			display: flex;
+			flex-direction: column;
+		}
 	}
 	.editor-wrapper {
 		display: flex;
