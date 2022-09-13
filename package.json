@@ -33,6 +33,7 @@
 		"axios-auth-refresh": "^3.3.3",
 		"color": "^4.2.3",
 		"lodash.clonedeep": "^4.5.0",
+		"monaco-editor": "^0.34.0",
 		"svelte-icons": "^2.1.0",
 		"svelte-inline-svg": "^1.1.4"
 	}

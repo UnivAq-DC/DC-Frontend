@@ -29,7 +29,7 @@ export const BASE_THEME: SerializedTheme = {
     vars: {
         background: createThemeProp("background", "#0F151B"),
         backgroundFlip: createThemeProp("backgroundFlip", "#E2D4B7"),
-        primary: createThemeProp("primary", "#111e1a"),
+        primary: createThemeProp("primary", "#19232d"),
         secondary: createThemeProp("secondary", "#B33A3A"),
         layer: createThemeProp("layer", "#1E2A35"),
         accent: createThemeProp("accent", "#88FF00"),
@@ -41,7 +41,7 @@ function createThemeProp(name: string, value: string) {
     return {
         css: name,
         value,
-        text: Color(value).isDark() ? "white" : "black"
+        text: Color(value).isDark() ? "#edeae5" : "#151414"
     }
 }
 class Theme {

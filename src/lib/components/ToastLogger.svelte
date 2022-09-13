@@ -21,7 +21,7 @@
 </script>
 
 <div class="toasts-column">
-	{#each $logger as toast}
+	{#each $logger as toast (toast._id)}
 		<div
 			in:send={{ key: toast._id }}
 			out:receive={{ key: toast._id }}

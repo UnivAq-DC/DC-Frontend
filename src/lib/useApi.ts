@@ -18,12 +18,12 @@ const EMPTY_RESPONSE = {
 type UseApiOptions<T, E = ErrorResponse> = {
     autoFetch?: boolean
     baseData?: T
-    onError?: (error: E | null) => void
+    onError?: (typedError: E | null, error: any) => void
 }
 
 type UseApiOptionsNoAutoFetch<T, E = ErrorResponse> = {
     baseData?: T
-    onError?: (error: E | null) => void
+    onError?: (typedError: E | null, error: any) => void
 }
 
 export function useGetApi<T>(method: ApiGetMethod<T>, options?: UseApiOptions<T>) {
@@ -31,7 +31,7 @@ export function useGetApi<T>(method: ApiGetMethod<T>, options?: UseApiOptions<T>
     async function fetch() {
         update(v => ({ ...v, loading: true }))
         const res = await method()
-        if(!res.ok && options?.onError) options.onError(res.errorData)
+        if(!res.ok && options?.onError) options.onError(res.errorData, res.error)
         set({
             loading: false,
             error: res.ok ? null : res.error,
@@ -47,7 +47,7 @@ export function useGetRestApi<T>(method: ApiGetRestMethod<T>, options?: UseApiOp
     async function fetch(urlParams: string) {
         update(v => ({ ...v, loading: true }))
         const res = await method(urlParams)
-        if(!res.ok && options?.onError) options.onError(res.errorData)
+        if(!res.ok && options?.onError) options.onError(res.errorData, res.error)
         set({
             loading: false,
             error: res.ok ? null : res.error,
@@ -66,7 +66,7 @@ export function usePostNoDataApi<T>(method: ApiPostNoDataMethod<T>, options?: Us
     async function fetch() {
         update(v => ({ ...v, loading: true }))
         const res = await method()
-        if(!res.ok && options?.onError) options.onError(res.errorData)
+        if(!res.ok && options?.onError) options.onError(res.errorData, res.error)
         set({
             loading: false,
             error: res.ok ? null : res.error,
@@ -83,7 +83,7 @@ export function usePostApi<T, D>(method: ApiPostMethod<T, D>, options?: UseApiOp
     async function fetch(data: D) {
         update(v => ({ ...v, loading: true }))
         const res = await method(data)
-        if(!res.ok && options?.onError) options.onError(res.errorData)
+        if(!res.ok && options?.onError) options.onError(res.errorData, res.error)
         set({
             loading: false,
             error: res.ok ? null : res.error,

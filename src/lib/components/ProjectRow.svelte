@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IProject } from "src/types/Project"
+	import type { IProject } from "$lib/types/Project"
 import LanguageIcon from "./LanguageIcon.svelte";
     import Button from "./Button.svelte";
 	export let project: IProject

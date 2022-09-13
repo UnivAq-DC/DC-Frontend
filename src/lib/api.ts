@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios"
-import type { IProject } from "src/types/Project"
-import type { UserLogin, UserLoginResponse } from "src/types/User"
+import type { IProject } from "$lib/types/Project"
+import type { UserLogin, UserLoginResponse } from "$lib/types/User"
 import { axios } from "./axios"
 
 
