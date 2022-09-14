@@ -1,15 +1,22 @@
 <script lang="ts">
 	export let style: string = ""
 	export let cssVar: string = "primary"
+    export let fancyColor: string = "var(--accent)"
     export let fancy: boolean = false
-
+    export let bold: boolean = false
 </script>
 
 <button 
 	on:click
 	class="button"
-	style={`background-color: var(--${cssVar}); color: var(--${cssVar}-text); ${style}`}
+	style={`
+        background-color: var(--${cssVar}); 
+        color: var(--${cssVar}-text); 
+        --fancy-color: ${fancyColor};
+        ${style}`
+    }
     class:fancy
+    class:bold
 >
 	<slot />
 </button>
@@ -29,6 +36,9 @@
     }
     .fancy:hover{
         transform: translate(-0.1rem, -0.1rem);
-        box-shadow: 0.2rem 0.2rem 0 var(--accent);
+        box-shadow: 0.2rem 0.2rem 0 var(--fancy-color);
+    }
+    .bold{
+        font-weight: bold;
     }
 </style>

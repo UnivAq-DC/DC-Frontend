@@ -4,5 +4,6 @@ export type UserLogin = {
     password: string
 }
 export type UserLoginResponse = {
+    username: string
     token: string
 }

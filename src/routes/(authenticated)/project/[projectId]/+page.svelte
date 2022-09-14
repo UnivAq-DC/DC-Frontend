@@ -4,10 +4,10 @@
 	import Editor from "$lib/components/Editor.svelte"
 	import EditorProject from "$lib/components/EditorProject.svelte"
 	import Select from "$lib/components/Select.svelte"
-	import { Language, type IProjectDetailed } from "$types/Project"
+	import { Language, type IProject } from "$types/Project"
 	import type { UserSubmission } from "$types/UserSubmission"
 	//remove the default once done testing
-	let project: IProjectDetailed = {
+	let project: IProject = {
 		title: "Some title",
 		description: "some long description",
 		languages: [Language.C, Language.Python, Language.Cpp],
@@ -34,7 +34,7 @@
 		<div class="row bottom-wrapper space-between">
 			<div class="row-centered">
 				Linguaggio
-				<Select style="margin-left: 1rem">
+				<Select style="margin-left: 1rem" bind:value={userSubmission.language}>
 					{#each project.languages as language (language)}
 						<option value={language}>{language}</option>
 					{/each}

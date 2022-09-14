@@ -2,7 +2,8 @@
 	import { onMount } from "svelte"
 	import type monaco from "monaco-editor"
 	import { Monaco, type MonacoType } from "$lib/Monaco"
-	import type { Language } from "$lib/types/Project"
+	import { Language } from "$lib/types/Project"
+	import { logger } from "$lib/stores/toast"
 	export let disabled = false
 	export let language: Language
 	export let code: string
@@ -11,12 +12,18 @@
 	let editor: monaco.editor.IStandaloneCodeEditor
 	let monacoInstance: MonacoType
 	const toDispose: any[] = []
+	const langMap = {
+		[Language.C]: "c",
+		[Language.Cpp]: "cpp",
+		[Language.Python]: "python",
+	}
+
 	onMount(async () => {
 		Monaco.registerLanguages()
 		monacoInstance = await Monaco.get()
 		editor = monacoInstance.editor.create(el, {
 			value: code,
-			language: language.toLowerCase(),
+			language: langMap[language],
 			theme: "custom-theme",
 			minimap: { enabled: false },
 			scrollbar: {
@@ -28,6 +35,7 @@
 			smoothScrolling: true,
 		})
 		const observer = new ResizeObserver(() => {
+			if(!mockEditor) return
 			const bounds = mockEditor.getBoundingClientRect()
 			editor.layout({
 				width: bounds.width,
@@ -43,6 +51,8 @@
 					code = editor.getValue()
 				})
 			)
+		} else {
+			logger.error("Error loading the editor")
 		}
 		return () => {
 			toDispose.forEach((d) => d.dispose())
@@ -53,7 +63,7 @@
 	$: if (monacoInstance?.editor) {
 		monacoInstance.editor.setModelLanguage(
 			editor.getModel()!,
-			language.toLowerCase()
+			langMap[language]
 		)
 	}
 	$: editor?.updateOptions({ readOnly: disabled })

@@ -10,8 +10,5 @@ export interface IProject{
     description: string
     languages: Language[]
     id: string
-}
-
-export interface IProjectDetailed extends IProject{
     markdown: string
 }

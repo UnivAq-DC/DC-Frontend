@@ -6,11 +6,11 @@
 </script>
 
 <script lang="ts">
-	import type { IProjectDetailed } from "$lib/types/Project"
+	import type { IProject } from "$lib/types/Project"
 	import { Viewer } from "bytemd"
 	import EditorProjectTab from "./EditorProjectTab.svelte"
 	import TabSelector from "./TabSelector.svelte"
-	export let project: IProjectDetailed
+	export let project: IProject
 	export let currentMode: EditorMode = EditorMode.Prompt
 </script>
 

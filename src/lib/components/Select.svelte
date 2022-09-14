@@ -1,10 +1,12 @@
 <script lang="ts">
 	export let style: string = ""
 	export let cssVar: string = "primary"
+	export let value: string
 </script>
 
 <select
 	style={`background-color: var(--${cssVar}); color: var(--${cssVar}-text); ${style}`}
+	bind:value
 	on:change
 	class="select"
 >

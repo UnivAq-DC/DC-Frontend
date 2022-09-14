@@ -1,4 +1,4 @@
-import type { AxiosResponse } from "axios"
+import type { AxiosRequestConfig, AxiosResponse } from "axios"
 import type { IProject } from "$lib/types/Project"
 import type { UserLogin, UserLoginResponse } from "$lib/types/User"
 import { axios } from "./axios"
@@ -26,9 +26,9 @@ export type ApiPostNoDataMethod<T, E = ErrorResponse> = () => Response<T, E>
 
 class Api {
     //keep as anonymous function to preserve `this` context
-    getJson = async <T, E = ErrorResponse>(path: string): Response<T, E> => {
+    getJson = async <T, E = ErrorResponse>(path: string, options?: AxiosRequestConfig): Response<T, E> => {
         try {
-            const res = await axios.get<T>(path)
+            const res = await axios.get<T>(path, options)
             return { ok: true, data: res.data, res }
         } catch (e: any) {
             if (e.response) {
@@ -48,9 +48,9 @@ class Api {
             }
         }
     }
-    postJson = async <T, D, E = ErrorResponse>(path: string, requestData: D): Response<T, E> => {
+    postJson = async <T, D, E = ErrorResponse>(path: string, requestData: D, options?: AxiosRequestConfig): Response<T, E> => {
         try {
-            const res = await axios.post(path, requestData)
+            const res = await axios.post(path, requestData, options)
             const data = res.data as T
             return { ok: true, data, res }
         } catch (e: any) {
@@ -78,7 +78,7 @@ class Api {
         return this.postJson('login', data)
     }
     checkLogin = async (): Response<UserLoginResponse> => {
-        return this.getJson('status')
+        return this.getJson('status', {withCredentials: true})
     }
 }
 

@@ -8,7 +8,7 @@
 	}
 </script>
 
-<AnimatedPage cropped style='align-items: center;'>
+<AnimatedPage cropped>
 	<div class="column login-page">
 		<h1>Login</h1>
 		<div class="login-form-wrapper">
@@ -35,7 +35,7 @@
 						type="password"
 					/>
 				</div>
-				<Button style="width: 100%" cssVar="accent-3">Login</Button>
+				<Button style="width: 100%; margin-top: 1rem" cssVar="accent-3">Login</Button>
 			</form>
 		</div>
 	</div>
@@ -43,7 +43,8 @@
 
 <style lang="scss">
 	.login-form-wrapper {
-        min-width: 25rem;
+        max-width: 25rem;
+		width: 100%;
 		border-radius: 0.8rem;
 		padding: 1rem;
 		background-color: var(--primary);
@@ -59,13 +60,15 @@
 	.input,
 	.password-input {
 		background-color: var(--layer);
-		padding: 0.4rem;
+		padding: 0.5rem;
 		border: none;
 		border-radius: 0.3rem;
 		color: var(--layer-text);
 	}
 	.login-page {
-		margin-top: 2rem;
+		margin-top: 5rem;
+		flex: 1;
+		align-items: center;
 		gap: 0.5rem;
 	}
 </style>

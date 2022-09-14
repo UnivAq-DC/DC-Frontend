@@ -11,6 +11,26 @@
 		},
 	})
 	import { logger } from "$lib/stores/toast"
+	import { Language, type IProject } from "$lib/types/Project"
+
+	const projectsExamples: IProject[] = [
+		{
+			title: "test project",
+			description:
+				"this is some description of the project that goes inside of this app",
+			languages: [Language.C, Language.Cpp, Language.Python],
+			id: "2",
+			markdown: "this is some markdown",
+		},
+		{
+			title: "Another project",
+			description:
+				"this is some description of the project that goes inside of this app",
+			languages: [Language.C, Language.Cpp, Language.Python],
+			id: "3",
+			markdown: "this is some markdown",
+		},
+	]
 </script>
 
 <svelte:head>
@@ -20,6 +40,10 @@
 	<div class="column projects-content">
 		<div class="project-title">Progetti</div>
 		<div class="column projects-wrapper">
+			{#each projectsExamples as project (project.id)}
+				<ProjectRow {project} />
+			{/each}
+			<!--
 			{#if $projects.loading}
 				<div class="loading">Loading projects...</div>
 			{:else if $projects.error || !$projects.data}
@@ -29,15 +53,9 @@
 					<ProjectRow {project} />
 				{/each}
 			{/if}
+			-->
 		</div>
 	</div>
-	<Button
-		on:click={() => {
-			logger.success("test")
-		}}
-	>
-		test
-	</Button>
 </AnimatedPage>
 
 <style lang="scss">
@@ -49,6 +67,7 @@
 	}
 	.projects-content {
 		margin-top: 4rem;
+		gap: 0.8rem;
 		@media screen and (max-width: 800px) {
 			margin-top: 1rem;
 		}
@@ -57,8 +76,6 @@
 		color: var(--red);
 	}
 	.projects-wrapper {
-		margin-top: 1rem;
-		padding: 0.4rem;
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: 1rem;
