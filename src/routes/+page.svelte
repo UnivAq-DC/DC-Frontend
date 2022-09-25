@@ -67,13 +67,12 @@
 	}
 	.projects-content {
 		margin-top: 4rem;
+		padding: 1rem;
 		gap: 0.8rem;
 		@media screen and (max-width: 800px) {
 			margin-top: 1rem;
+			padding: 0;
 		}
-	}
-	.error {
-		color: var(--red);
 	}
 	.projects-wrapper {
 		display: grid;

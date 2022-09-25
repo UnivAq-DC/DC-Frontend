@@ -47,7 +47,12 @@
 				</EditorProjectTab>
 			{/if}
 			{#if currentMode === EditorMode.Submissions}
-				<EditorProjectTab>submissions</EditorProjectTab>
+				<EditorProjectTab>
+					<h2>
+						I tuoi risultati
+					</h2>
+
+				</EditorProjectTab>
 			{/if}
 		</div>
 	</div>

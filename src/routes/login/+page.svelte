@@ -35,7 +35,9 @@
 						type="password"
 					/>
 				</div>
-				<Button style="width: 100%; margin-top: 1rem" cssVar="accent-3">Login</Button>
+				<Button style="width: 100%; margin-top: 1rem" cssVar="accent-3" disabled={!(user.email && user.password)}>
+					Login
+				</Button>
 			</form>
 		</div>
 	</div>
@@ -43,7 +45,7 @@
 
 <style lang="scss">
 	.login-form-wrapper {
-        max-width: 25rem;
+		max-width: 25rem;
 		width: 100%;
 		border-radius: 0.8rem;
 		padding: 1rem;
@@ -52,9 +54,9 @@
 			display: flex;
 			gap: 1rem;
 			flex-direction: column;
-            input {
-                margin-top: 0.5rem;
-            }
+			input {
+				margin-top: 0.5rem;
+			}
 		}
 	}
 	.input,

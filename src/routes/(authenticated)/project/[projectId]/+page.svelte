@@ -10,7 +10,7 @@
 	let project: IProject = {
 		title: "Some title",
 		description: "some long description",
-		languages: [Language.C, Language.Python, Language.Cpp],
+		languages: [Language.C, Language.Python, Language.Cpp, Language.Java],
 		markdown: "<b> some markdown </b>",
 		id: "1",
 	}

@@ -22,5 +22,6 @@
 		border-radius: 0.4rem;
 		cursor: pointer;
 		transition: all 0.2s;
+		-webkit-appearance: auto;
 	}
 </style>

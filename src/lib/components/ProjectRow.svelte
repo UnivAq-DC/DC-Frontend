@@ -63,7 +63,7 @@
     }
 	.description {
 		padding: 0.6rem;
-		background-color: var(--layer);
+		padding-bottom: 0.2rem;
 		border-radius: 0.4rem;
 		max-height: 15rem;
 		overflow-y: auto;

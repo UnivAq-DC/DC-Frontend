@@ -16,6 +16,7 @@
 		[Language.C]: "c",
 		[Language.Cpp]: "cpp",
 		[Language.Python]: "python",
+		[Language.Java]: "java",
 	}
 
 	onMount(async () => {

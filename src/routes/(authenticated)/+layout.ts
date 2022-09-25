@@ -5,7 +5,7 @@ import { redirect } from "@sveltejs/kit";
 /** @type {import('./$types').LayoutLoad} */
 export async function load() {
     const user = await api.checkLogin()
-    if(true){
+    if(dev && !user.ok) {
         return {
             props: {
                 user: {
@@ -15,7 +15,6 @@ export async function load() {
             }
         }
     }
-    /*
     if(user.ok){
         return {
             props: {
@@ -23,7 +22,6 @@ export async function load() {
             }
         }
     }
-    */
     console.log("Redirecting to login")
-    throw redirect(302, '/user/login')
+    throw redirect(302, '/login')
 }
