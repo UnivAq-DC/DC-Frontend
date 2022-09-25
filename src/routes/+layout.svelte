@@ -7,8 +7,8 @@ import { browser } from "$app/environment";
 	import ToastLogger from "$lib/components/ToastLogger.svelte"
 	import { Monaco } from "$lib/Monaco"
 	import "./global.css"
-
 	if(browser) Monaco.load()
+
 </script>
 
 <ToastLogger />

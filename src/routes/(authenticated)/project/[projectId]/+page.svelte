@@ -57,7 +57,7 @@
 			"e e p"
 			"b b p";
 		gap: 1rem;
-		@media (max-width: 900px) {
+		@media (max-width: 920px) {
 			display: flex;
 			flex-direction: column;
 		}
