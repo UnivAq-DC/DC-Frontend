@@ -15,6 +15,7 @@ export async function load() {
             }
         }
     }
+    /*
     if(user.ok){
         return {
             props: {
@@ -22,6 +23,7 @@ export async function load() {
             }
         }
     }
+    */
     console.log("Redirecting to login")
     throw redirect(302, '/user/login')
 }
