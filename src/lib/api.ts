@@ -24,7 +24,7 @@ export type ApiGetRestMethod<T, E = ErrorResponse> = (urlParams: string) => Resp
 export type ApiPostMethod<T, P, E = ErrorResponse> = (data: P) => Response<T, E>
 export type ApiPostNoDataMethod<T, E = ErrorResponse> = () => Response<T, E>
 
-class Api {
+export class Api {
     //keep as anonymous function to preserve `this` context
     getJson = async <T, E = ErrorResponse>(path: string, options?: AxiosRequestConfig): Response<T, E> => {
         try {
@@ -80,8 +80,9 @@ class Api {
     loginUser = async (data: UserLogin): Response<UserLoginResponse, ErrorLoginResponse> => {
         return this.postJson('auth/signin', data)
     }
+    static validationRoute = "users/me"
     checkLogin = async (): Response<UserLoginResponse> => {
-        return this.getJson('users/me', {withCredentials: true})
+        return this.getJson(Api.validationRoute, {withCredentials: true})
     }
 }
 

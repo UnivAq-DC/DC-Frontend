@@ -4,7 +4,7 @@ import createAuthRefreshInterceptor from 'axios-auth-refresh'
 import { user } from './stores/user'
 const API_URL = 'http://localhost:8080/' //ENV???
 import { get } from 'svelte/store'
-import { api } from './api'
+import { Api, api } from './api'
 //@ts-ignore
 const authInterceptor = createAuthRefreshInterceptor.default || createAuthRefreshInterceptor
 
@@ -26,21 +26,21 @@ export const axios = Axios.create({
 })
 axios.interceptors.request.use(authRequestInterceptor)
 
-axios.interceptors.response.use(
-	(res) => res,
-	(err:AxiosError) => {
-		user.reset()
-		return Promise.reject(err)
-	}
-)
 authInterceptor(axios, async (err: any) => {
     if(err) console.error(err)
 	console.log("Fetch refresh")
-	const response = await api.checkLogin()
-	if(response.ok){
-		user.setToken(response.data.data)
-	}else{
+	try{
+		const response = await fetch(`${API_URL}${Api.validationRoute}`)
+		const data = await response.json()
+		if(response.ok){
+			user.setToken(data.data)
+		}else{
+			user.reset()
+		}
+	}catch(e){
+		console.error(e)
 		user.reset()
 	}
+
 	return Promise.resolve()
 })
