@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Language } from "$lib/types/Project"
+	import { Language } from "$lib/types/Problem"
 	import InlineSVG from "svelte-inline-svg"
 	export let language: Language
 	export let style: string = ""

@@ -1,4 +1,4 @@
-import type { Language } from "./Project"
+import type { Language } from "./Problem"
 
 
 export type UserSubmission = {

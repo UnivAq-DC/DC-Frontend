@@ -2,7 +2,7 @@ import Axios from 'axios'
 import type { AxiosRequestConfig, AxiosError, AxiosRequestHeaders} from 'axios'
 import createAuthRefreshInterceptor from 'axios-auth-refresh'
 import { user } from './stores/user'
-const API_URL = 'http://localhost:5000/' //ENV???
+const API_URL = 'http://localhost:8080/' //ENV???
 import { get } from 'svelte/store'
 import { api } from './api'
 //@ts-ignore
@@ -22,13 +22,12 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
 }
 
 export const axios = Axios.create({
-	baseURL: API_URL,
-	withCredentials: true
+	baseURL: API_URL
 })
 axios.interceptors.request.use(authRequestInterceptor)
 
 axios.interceptors.response.use(
-	(res) => res.data,
+	(res) => res,
 	(err:AxiosError) => {
 		user.reset()
 		return Promise.reject(err)
@@ -39,7 +38,7 @@ authInterceptor(axios, async (err: any) => {
 	console.log("Fetch refresh")
 	const response = await api.checkLogin()
 	if(response.ok){
-		user.set(response.data)
+		user.setToken(response.data.data)
 	}else{
 		user.reset()
 	}

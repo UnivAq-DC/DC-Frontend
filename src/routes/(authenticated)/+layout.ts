@@ -1,20 +1,12 @@
-import { dev } from "$app/environment";
 import { api } from "$lib/api";
 import { redirect } from "@sveltejs/kit";
+
+export const prerender = false
+export const ssr = false
 
 /** @type {import('./$types').LayoutLoad} */
 export async function load() {
     const user = await api.checkLogin()
-    if(dev && !user.ok) {
-        return {
-            props: {
-                user: {
-                    username: 'test',
-                    id: 'test',
-                }
-            }
-        }
-    }
     if(user.ok){
         return {
             props: {
@@ -22,6 +14,7 @@ export async function load() {
             }
         }
     }
+    console.log(user)
     console.log("Redirecting to login")
     throw redirect(302, '/login')
 }

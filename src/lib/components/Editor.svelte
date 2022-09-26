@@ -2,7 +2,7 @@
 	import { onMount } from "svelte"
 	import type monaco from "monaco-editor"
 	import { Monaco, type MonacoType } from "$lib/Monaco"
-	import { Language } from "$lib/types/Project"
+	import { Language } from "$lib/types/Problem"
 	import { logger } from "$lib/stores/toast"
 	export let disabled = false
 	export let language: Language

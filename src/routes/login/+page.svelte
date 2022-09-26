@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { goto } from "$app/navigation"
+  import { api } from "$lib/api"
 	import AnimatedPage from "$lib/components/AnimatedPage.svelte"
 	import Button from "$lib/components/Button.svelte"
+  import { logger } from "$lib/stores/toast"
+  import { user } from "$lib/stores/user"
 	import type { UserLogin } from "$lib/types/User"
-	let user: UserLogin = {
+	let userLogin: UserLogin = {
 		email: "",
 		password: "",
 	}
@@ -13,14 +17,21 @@
 		<h1>Login</h1>
 		<div class="login-form-wrapper">
 			<form
-				on:submit|preventDefault={() => {
-					console.log(user)
+				on:submit|preventDefault={async () => {
+					const result = await api.loginUser(userLogin)
+					if(result.ok){
+						logger.success(result.data.message)
+						user.setToken(result.data.data)
+						goto("/")
+					}else{
+						logger.error(result.errorData?.message ?? "Failed to login")
+					}
 				}}
 			>
 				<div class="column">
 					<div>Email</div>
 					<input
-						bind:value={user.email}
+						bind:value={userLogin.email}
 						placeholder="Email"
 						type="text"
 						class="input"
@@ -29,13 +40,13 @@
 				<div class="column">
 					<div>Password</div>
 					<input
-						bind:value={user.password}
+						bind:value={userLogin.password}
 						class="password-input"
 						placeholder="Password"
 						type="password"
 					/>
 				</div>
-				<Button style="width: 100%; margin-top: 1rem" cssVar="accent-3" disabled={!(user.email && user.password)}>
+				<Button style="width: 100%; margin-top: 1rem" cssVar="accent-3" disabled={!(userLogin.email && userLogin.password)}>
 					Login
 				</Button>
 			</form>

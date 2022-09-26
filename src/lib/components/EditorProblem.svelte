@@ -6,15 +6,15 @@
 </script>
 
 <script lang="ts">
-	import type { IProject } from "$lib/types/Project"
-	import { Viewer } from "bytemd"
-	import EditorProjectTab from "./EditorProjectTab.svelte"
+	import type { Problem } from "$lib/types/Problem"
+	import SvelteMarkdown from 'svelte-markdown'
+	import EditorProblemTab from "./EditorProblemTab.svelte"
 	import TabSelector from "./TabSelector.svelte"
-	export let project: IProject
+	export let problem: Problem
 	export let currentMode: EditorMode = EditorMode.Prompt
 </script>
 
-<div class="column editor-project">
+<div class="column editor-problem">
 	<div class="column tabs-wrapper">
 		<div class="row tabs-header">
 			<TabSelector
@@ -37,29 +37,29 @@
 				: ""}
 		>
 			{#if currentMode === EditorMode.Prompt}
-				<EditorProjectTab>
+				<EditorProblemTab>
 					<h2>
-						{project.title}
+						{problem.name}
 					</h2>
 					<div class="markdown-wrapper">
-						<Viewer value={project.markdown} />
+						<SvelteMarkdown source={problem.attachment} />
 					</div>
-				</EditorProjectTab>
+				</EditorProblemTab>
 			{/if}
 			{#if currentMode === EditorMode.Submissions}
-				<EditorProjectTab>
+				<EditorProblemTab>
 					<h2>
 						I tuoi risultati
 					</h2>
 
-				</EditorProjectTab>
+				</EditorProblemTab>
 			{/if}
 		</div>
 	</div>
 </div>
 
 <style lang="scss">
-	.editor-project {
+	.editor-problem {
 		min-width: 25rem;
 		flex: 1;
 	}

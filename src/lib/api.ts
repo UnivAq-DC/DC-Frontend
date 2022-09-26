@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios"
-import type { IProject } from "$lib/types/Project"
-import type { UserLogin, UserLoginResponse } from "$lib/types/User"
+import type { Problem, ProblemPreview } from "$lib/types/Problem"
+import type { ErrorLoginResponse, UserLogin, UserLoginResponse } from "$lib/types/User"
 import { axios } from "./axios"
 
 
@@ -50,8 +50,8 @@ class Api {
     }
     postJson = async <T, D, E = ErrorResponse>(path: string, requestData: D, options?: AxiosRequestConfig): Response<T, E> => {
         try {
-            const res = await axios.post(path, requestData, options)
-            const data = res.data as T
+            const res = await axios.post<T>(path, requestData, options) 
+            const data = res.data
             return { ok: true, data, res }
         } catch (e: any) {
             if (e.response) {
@@ -71,14 +71,17 @@ class Api {
             }
         }
     }
-    fetchProjects = async (): Response<IProject[]> => {
-        return this.getJson<IProject[]>('projects')
+    fetchProblems = async (): Response<ProblemPreview[]> => {
+        return this.getJson<ProblemPreview[]>('problems')
     }
-    loginUser = async (data: UserLogin): Response<UserLoginResponse> => {
-        return this.postJson('login', data)
+    fetchProblem = async (id: string): Response<Problem> => {
+        return this.getJson<Problem>(`problems/${id}`)
+    }
+    loginUser = async (data: UserLogin): Response<UserLoginResponse, ErrorLoginResponse> => {
+        return this.postJson('auth/signin', data)
     }
     checkLogin = async (): Response<UserLoginResponse> => {
-        return this.getJson('status', {withCredentials: true})
+        return this.getJson('users/me', {withCredentials: true})
     }
 }
 
