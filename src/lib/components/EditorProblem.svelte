@@ -1,17 +1,21 @@
 <script lang="ts" context="module">
 	export enum EditorMode {
 		Prompt = "prompt",
-		Submissions = "submission",
+		Submitment = "submitment",
 	}
 </script>
 
 <script lang="ts">
 	import type { Problem } from "$lib/types/Problem"
-	import SvelteMarkdown from 'svelte-markdown'
+	import SvelteMarkdown from "svelte-markdown"
+	import Testcase from "./Testcase.svelte"
 	import EditorProblemTab from "./EditorProblemTab.svelte"
 	import TabSelector from "./TabSelector.svelte"
+	import type { Submitment } from "$lib/types/UserSubmitment"
+	import UserSubmitmentResult from "./UserSubmitmentResult.svelte"
 	export let problem: Problem
 	export let currentMode: EditorMode = EditorMode.Prompt
+	export let userSubmitments: Submitment[] | null = []
 </script>
 
 <div class="column editor-problem">
@@ -24,8 +28,8 @@
 				Prompt
 			</TabSelector>
 			<TabSelector
-				selected={currentMode === EditorMode.Submissions}
-				on:click={() => (currentMode = EditorMode.Submissions)}
+				selected={currentMode === EditorMode.Submitment}
+				on:click={() => (currentMode = EditorMode.Submitment)}
 			>
 				Risultati
 			</TabSelector>
@@ -44,14 +48,30 @@
 					<div class="markdown-wrapper">
 						<SvelteMarkdown source={problem.attachment} />
 					</div>
+					{#if problem.testcaseList}
+						<div class="testcases-wrapper column">
+							<h2>Esempi</h2>
+							{#each problem.testcaseList as testcase}
+								<Testcase {testcase} />
+							{/each}
+						</div>
+					{/if}
 				</EditorProblemTab>
 			{/if}
-			{#if currentMode === EditorMode.Submissions}
+			{#if currentMode === EditorMode.Submitment}
 				<EditorProblemTab>
-					<h2>
-						I tuoi risultati
-					</h2>
-
+					<h2 style="margin-bottom: 0.5rem">I tuoi risultati</h2>
+					{#if userSubmitments === null}
+						Caricamento...
+					{:else if userSubmitments.length === 0}
+						<div class="no-submitments">Non hai ancora inviato nulla</div>
+					{:else}
+						<div class="submitments-wrapper column">
+							{#each userSubmitments as submitment}
+								<UserSubmitmentResult {submitment} />
+							{/each}
+						</div>
+					{/if}
 				</EditorProblemTab>
 			{/if}
 		</div>
@@ -65,15 +85,22 @@
 	}
 	.tabs-wrapper {
 		display: flex;
-		flex: 1;
-        overflow-y: auto;
+		height: calc(100vh - 2rem);
+		@media screen and (max-width: 800px) {
+			height: unset;			
+		}
 	}
 	.tab-wrapper {
 		flex: 1;
-		padding: 1rem;
+		display: flex;
+		overflow-y: auto;
 		background-color: var(--primary);
-		border-radius: 0.4rem;
 		color: var(--primary-text);
+		border-radius: 0.4rem;
+	}
+	.submitments-wrapper{
+		gap: 0.5rem;
+		padding-bottom: 0.8rem;
 	}
 	.markdown-wrapper {
 		margin-top: 0.6rem;
@@ -82,6 +109,11 @@
 		color: var(--background-flip-text);
 		border-radius: 0.3rem;
 		min-height: 5rem;
+	}
+	.testcases-wrapper {
+		margin-top: auto;
+		padding-top: 1rem;
+		gap: 0.4rem;
 	}
 	.tabs-header {
 	}

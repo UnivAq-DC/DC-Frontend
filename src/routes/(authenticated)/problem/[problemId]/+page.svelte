@@ -5,11 +5,14 @@
 	import AnimatedPage from "$lib/components/AnimatedPage.svelte"
 	import Button from "$lib/components/Button.svelte"
 	import Editor from "$lib/components/Editor.svelte"
-	import EditorProblem from "$lib/components/EditorProblem.svelte"
+	import EditorProblem, {
+		EditorMode,
+	} from "$lib/components/EditorProblem.svelte"
 	import Select from "$lib/components/Select.svelte"
-	import { Language, type Problem } from "$lib/types/Problem"
+  import { logger } from "$lib/stores/toast"
+	import { Language } from "$lib/types/Problem"
 	import { useGetApi, useGetRestApi } from "$lib/useApi"
-	import type { UserSubmission } from "$types/UserSubmission"
+	import type { UserSubmitment } from "$lib/types/UserSubmitment"
 	//remove the default once done testing
 	let problem = useGetRestApi(api.fetchProblem)
 	$: {
@@ -17,11 +20,14 @@
 			problem.fetch($page.params.problemId)
 		}
 	}
-
-	let userSubmission: UserSubmission = {
+	let isSubmitting = false
+	let userSubmitment: UserSubmitment = {
 		code: "",
 		language: Language.C,
+		problemId: Number($page.params.problemId),
 	}
+	let userSubimtments = useGetApi(api.fetchUserSubmitments, {autoFetch: true})
+	let currentMode: EditorMode = EditorMode.Prompt
 </script>
 
 <AnimatedPage style="position:relative;">
@@ -33,19 +39,23 @@
 		<div class="problem-grid">
 			<div class="editor-wrapper">
 				<Editor
-					bind:code={userSubmission.code}
-					bind:language={userSubmission.language}
+					bind:code={userSubmitment.code}
+					bind:language={userSubmitment.language}
 				/>
 			</div>
 			<div class="column prompt-wrapper">
-				<EditorProblem problem={$problem.data} />
+				<EditorProblem 
+					problem={$problem.data} 
+					bind:currentMode 
+					userSubmitments={$userSubimtments.data}
+				/>
 			</div>
 			<div class="row bottom-wrapper space-between">
 				<div class="row-centered">
 					Linguaggio
 					<Select
 						style="margin-left: 1rem"
-						bind:value={userSubmission.language}
+						bind:value={userSubmitment.language}
 					>
 						<!--
 						{#each problem.languages as language (language)}
@@ -54,7 +64,23 @@
 						-->
 					</Select>
 				</div>
-				<Button fancy>Invia</Button>
+				<Button 
+					fancy 
+					disabled={isSubmitting}
+					on:click={async () => {
+						isSubmitting = true
+						const res = await api.submitSubmitment(userSubmitment)
+						isSubmitting = false
+						if(res.ok){
+							currentMode = EditorMode.Submitment
+						}else{
+							logger.error(res.errorData?.message.join(", ") || "Errore generico")
+						}
+						userSubimtments.fetch()
+					}}
+				>
+					{isSubmitting ? "controllo in corso..." : "Invia"}
+				</Button>
 			</div>
 		</div>
 	{/if}
@@ -63,7 +89,8 @@
 <style lang="scss">
 	.problem-grid {
 		display: grid;
-		flex: 1;
+		height: 100vh;
+		width: 100%;
 		padding: 1rem;
 		grid-template-columns: 1fr 1fr min-content;
 		grid-template-rows: 1fr 1fr min-content;

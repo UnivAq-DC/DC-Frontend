@@ -2,6 +2,7 @@ import type { AxiosRequestConfig, AxiosResponse } from "axios"
 import type { Problem, ProblemPreview } from "$lib/types/Problem"
 import type { ErrorLoginResponse, UserLogin, UserLoginResponse } from "$lib/types/User"
 import { axios } from "./axios"
+import type { Submitment, UserSubmitment, UserSubmitmentErrorResponse, UserSubmitmentResponse } from "./types/UserSubmitment"
 
 
 type BaseResponseError<E> = {
@@ -50,7 +51,7 @@ export class Api {
     }
     postJson = async <T, D, E = ErrorResponse>(path: string, requestData: D, options?: AxiosRequestConfig): Response<T, E> => {
         try {
-            const res = await axios.post<T>(path, requestData, options) 
+            const res = await axios.post<T>(path, requestData, options)
             const data = res.data
             return { ok: true, data, res }
         } catch (e: any) {
@@ -74,6 +75,12 @@ export class Api {
     fetchProblems = async (): Response<ProblemPreview[]> => {
         return this.getJson<ProblemPreview[]>('problems')
     }
+    fetchUserSubmitments = async (): Response<Submitment[]> => {
+        return this.getJson('submitments')
+    }
+    submitSubmitment = async (data: UserSubmitment): Response<UserSubmitmentResponse, UserSubmitmentErrorResponse> => {
+        return this.postJson('submitments', data)
+    }
     fetchProblem = async (id: string): Response<Problem> => {
         return this.getJson<Problem>(`problems/${id}`)
     }
@@ -82,7 +89,7 @@ export class Api {
     }
     static validationRoute = "users/me"
     checkLogin = async (): Response<UserLoginResponse> => {
-        return this.getJson(Api.validationRoute, {withCredentials: true})
+        return this.getJson(Api.validationRoute, { withCredentials: true })
     }
 }
 

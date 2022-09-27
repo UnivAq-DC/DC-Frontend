@@ -26,8 +26,6 @@ export type Problem = {
     testcaseList?: Testcase[]
 }
 
-
-
 export type Testcase = {
     id: number
     createdAt: string

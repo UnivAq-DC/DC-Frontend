@@ -64,3 +64,21 @@ input:disabled{
 	align-items: center;
 	justify-content: center;
 }
+
+::-webkit-scrollbar {
+	width: 5px;
+	background: rgba(44, 44, 44, 0.9);
+}
+
+::-webkit-scrollbar-track {
+	background: none;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--accent);	
+	border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
