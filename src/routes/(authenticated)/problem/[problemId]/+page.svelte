@@ -51,6 +51,7 @@
 	onDestroy(() => storeCurrentCode())
 	
 	function handleUnload(e: any) {
+		if(import.meta.env.DEV) return
 		storeCurrentCode()
 		e.preventDefault
 		e.returnValue = ""
@@ -81,6 +82,9 @@
 					problem={$problem.data}
 					bind:currentMode
 					userSubmitments={$userSubimtments.data}
+					on:openCode={(c) => {
+						code = c.detail
+					}}
 				/>
 			</div>
 			<div class="row bottom-wrapper space-between">

@@ -95,7 +95,7 @@
 					{:else}
 						<div class="submitments-wrapper column">
 							{#each userSubmitments as submitment}
-								<UserSubmitmentResult {submitment} />
+								<UserSubmitmentResult {submitment} on:openCode/>
 							{/each}
 						</div>
 					{/if}
