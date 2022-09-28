@@ -12,7 +12,6 @@ class MonacoLoader {
 		if (browser) this.load()
 	}
 	dispose = () => {
-		console.log('Disposed')
 		this.toDispose.forEach(d => d.dispose())
 	}
 	async load(): Promise<MonacoType> {

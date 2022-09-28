@@ -11,27 +11,24 @@
 	import Select from "$lib/components/Select.svelte"
 	import { logger } from "$lib/stores/toast"
 	import { Language } from "$lib/types/Problem"
-	import { onMount } from "svelte"
+	import { onDestroy, onMount } from "svelte"
 	import { useGetRestApi } from "$lib/useApi"
-	import type { Submitment, UserSubmitment } from "$lib/types/UserSubmitment"
+	import type { Submitment } from "$lib/types/UserSubmitment"
 	import FaDiceD20 from "svelte-icons/fa/FaDiceD20.svelte"
 	import { getApiErrorMessage } from "$lib/utils"
+	import { codeStorage } from "$lib/codeStorage"
+
+	let code = ""
+	let currentMode: EditorMode = EditorMode.Prompt
+	let currentLanguage: Language = Language.Plain
+	let problemId = Number($page.params.problemId)
+	let isSubmitting = false
 	let problem = useGetRestApi(api.fetchProblem, {
 		onSuccess: (data) => {
-			userSubmitment.isCode = data.isCoding
-			if (data.isCoding) {
-				userSubmitment.language = data.availableLanguages[0] ?? Language.C
-			}
+			if (!data.isCoding) return
+			currentLanguage = data.availableLanguages[0] ?? Language.C
 		},
 	})
-	$: if (browser) problem.fetch($page.params.problemId)
-	let isSubmitting = false
-	let userSubmitment: UserSubmitment = {
-		code: "",
-		language: Language.Plain,
-		problemId: Number($page.params.problemId),
-		isCode: true,
-	}
 	let userSubimtments = useGetRestApi<Submitment[]>(api.getJson, {
 		onError: () => {
 			logger.error("Errore nel caricamento dei tuoi risultati, sei loggato?")
@@ -40,9 +37,28 @@
 	function fetchSubmitments() {
 		userSubimtments.fetch(`problems/${$page.params.problemId}/submitments`)
 	}
+	async function getStoredCode(lang: Language, probId: number) {
+		const stored = await codeStorage.getProblemCode(probId, lang)
+		code = stored.problem?.code ?? stored.defaultOfLanguage
+	}
+	async function storeCurrentCode() {
+		await codeStorage.storeProblemCode(problemId, currentLanguage, code)
+	}
+	$: if (browser) getStoredCode(currentLanguage, problemId)
+	$: if (browser) problem.fetch($page.params.problemId)
+	$: problemId = Number($page.params.problemId)
 	onMount(() => fetchSubmitments())
-	let currentMode: EditorMode = EditorMode.Prompt
+	onDestroy(() => storeCurrentCode())
+	
+	function handleUnload(e: any) {
+		storeCurrentCode()
+		e.preventDefault
+		e.returnValue = ""
+		return false
+	}
 </script>
+
+<svelte:window on:beforeunload={handleUnload} />
 <title>
 	{#if $problem.loading}
 		Loading problem...
@@ -56,13 +72,9 @@
 	{:else if $problem.error || !$problem.data}
 		<div class="error">Errore: {$problem.error}</div>
 	{:else}
-		
 		<div class="problem-grid">
 			<div class="editor-wrapper">
-				<Editor
-					bind:code={userSubmitment.code}
-					bind:language={userSubmitment.language}
-				/>
+				<Editor bind:code language={currentLanguage} />
 			</div>
 			<div class="column prompt-wrapper">
 				<EditorProblem
@@ -76,7 +88,11 @@
 					Linguaggio
 					<Select
 						style="margin-left: 1rem"
-						bind:value={userSubmitment.language}
+						value={currentLanguage}
+						on:change={async (e) => {
+							if (code.trim()) storeCurrentCode()
+							currentLanguage = e.detail
+						}}
 					>
 						{#each $problem.data.availableLanguages ?? [] as language (language)}
 							<option value={language}>{language}</option>
@@ -89,7 +105,13 @@
 					style="display:flex; perspective: 1000px;"
 					on:click={async () => {
 						isSubmitting = true
-						const res = await api.submitSubmitment(userSubmitment)
+						storeCurrentCode()
+						const res = await api.submitSubmitment({
+							problemId,
+							code,
+							language: currentLanguage,
+							isCode: $problem.data?.isCoding ?? true,
+						})
 						isSubmitting = false
 						if (res.ok) {
 							currentMode = EditorMode.Submitment

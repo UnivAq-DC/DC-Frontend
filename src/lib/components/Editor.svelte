@@ -66,6 +66,11 @@
 			langMap.get(language) ?? language.toString()
 		)
 	}
+	$: {
+		if (editor && editor.getValue() !== code) {
+			editor.setValue(code)
+		}
+	}
 	$: editor?.updateOptions({ readOnly: disabled })
 </script>
 

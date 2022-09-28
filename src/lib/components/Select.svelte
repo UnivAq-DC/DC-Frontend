@@ -1,13 +1,20 @@
 <script lang="ts">
+  	import { createEventDispatcher } from 'svelte';
 	export let style: string = ""
 	export let cssVar: string = "primary"
 	export let value: string
+
+	const dispatch = createEventDispatcher();
 </script>
 
 <select
 	style={`background-color: var(--${cssVar}); color: var(--${cssVar}-text); ${style}`}
 	bind:value
-	on:change
+	on:change={(e) => {
+		// @ts-ignore
+		let value = e.target?.value
+		dispatch("change", value)
+	}}
 	class="select"
 >
 	<slot />
