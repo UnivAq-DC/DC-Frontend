@@ -10,3 +10,13 @@ export function getApiErrorMessage<T>(error: ErrorRequest<T>){
     //@ts-ignore
     return error.message ?? "Unknown error"
 }
+
+
+export function isUrl(url: string){
+    try {
+        new URL(url)
+        return true
+    } catch (error) {
+        return false
+    }
+}

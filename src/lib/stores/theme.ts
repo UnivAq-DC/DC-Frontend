@@ -30,7 +30,7 @@ export const BASE_THEME: SerializedTheme = {
         background: createThemeProp("background", "#0F151B"),
         backgroundFlip: createThemeProp("background-flip", "#ddd5c5"),
         primary: createThemeProp("primary", "#19232d"),
-        secondary: createThemeProp("secondary", "#B33A3A"),
+        secondary: createThemeProp("secondary", "#495f75"),
         layer: createThemeProp("layer", "#1E2A35"),
         accent: createThemeProp("accent", "#88d333"),
         accent2: createThemeProp("accent-2", "#B33A3A"),

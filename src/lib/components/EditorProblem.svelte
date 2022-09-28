@@ -13,6 +13,10 @@
 	import TabSelector from "./TabSelector.svelte"
 	import type { Submitment } from "$lib/types/UserSubmitment"
 	import UserSubmitmentResult from "./UserSubmitmentResult.svelte"
+	import Button from "./Button.svelte"
+	import FaExternalLinkSquareAlt from "svelte-icons/fa/FaExternalLinkSquareAlt.svelte"
+  import { goto } from "$app/navigation"
+  import { isUrl } from "$lib/utils"
 	export let problem: Problem
 	export let currentMode: EditorMode = EditorMode.Prompt
 	export let userSubmitments: Submitment[] | null = []
@@ -42,12 +46,36 @@
 		>
 			{#if currentMode === EditorMode.Prompt}
 				<EditorProblemTab>
-					<h2>
+					<h2 class="problem-title">
 						{problem.name}
 					</h2>
-					<div class="markdown-wrapper">
-						<SvelteMarkdown source={problem.attachment} />
+					<div class="project-description">
+						{problem.description}
 					</div>
+					{#if isUrl(problem.attachment)}
+						<div class="pdf-iframe-wrapper">
+							<div class="pdf-iframe-controls row">
+								<Button
+									style="width: 2rem; height:2rem; padding: 0.2rem"
+									cssVar="primary"
+									on:click={() => {
+										window.open(problem.attachment, "_blank");
+									}}
+								>
+									<FaExternalLinkSquareAlt />
+								</Button>
+							</div>
+							<iframe
+								class="pdf-iframe"
+								title="pdf attachment"
+								src={`https://www.africau.edu/images/default/sample.pdf#toolbar=0&view=FitH`}
+							/>
+						</div>
+					{:else}
+						<div class="markdown-wrapper">
+							<SvelteMarkdown source={problem.attachment} />
+						</div>
+					{/if}
 					{#if problem.testcaseList}
 						<div class="testcases-wrapper column">
 							<h2>Esempi</h2>
@@ -80,19 +108,50 @@
 
 <style lang="scss">
 	.editor-problem {
-		width: 35vw;
+		width: 40vw;
 		min-width: 25rem;
 		@media screen and (max-width: 800px) {
-			min-width: unset;	
+			min-width: unset;
 			width: 100%;
 		}
 		flex: 1;
+	}
+	.pdf-iframe-wrapper {
+		display: flex;
+		flex: 1;
+		margin-top: 0.8rem;
+		position: relative;
+	}
+	.pdf-iframe-controls {
+		position: absolute;
+		top: 0;
+		right: 1.1rem;
+		padding: 0.2rem;
+		opacity: 0.7;
+		transition: all 0.3s;
+	}
+	.pdf-iframe-controls:hover {
+		opacity: 1;
+	}
+	.pdf-iframe {
+		display: flex;
+		flex: 1;
+		border-radius: 0.4rem;
+		border: none;
+	}
+	.project-description {
+		margin-top: 0.8rem;
+		font-size: 0.9rem;
+	}
+	.problem-title {
+		border-bottom: solid 1px var(--secondary);
+		padding-bottom: 0.4rem;
 	}
 	.tabs-wrapper {
 		display: flex;
 		height: calc(100vh - 2rem);
 		@media screen and (max-width: 800px) {
-			height: unset;			
+			height: unset;
 		}
 	}
 	.tab-wrapper {
@@ -103,12 +162,13 @@
 		color: var(--primary-text);
 		border-radius: 0.4rem;
 	}
-	.submitments-wrapper{
+	.submitments-wrapper {
 		gap: 0.5rem;
 		padding-bottom: 0.8rem;
 	}
 	.markdown-wrapper {
-		margin-top: 0.6rem;
+		margin-top: 1rem;
+		font-size: 0.9rem;
 		padding: 0.6rem;
 		background-color: var(--background-flip);
 		color: var(--background-flip-text);
@@ -119,7 +179,5 @@
 		margin-top: auto;
 		padding-top: 1rem;
 		gap: 0.4rem;
-	}
-	.tabs-header {
 	}
 </style>
