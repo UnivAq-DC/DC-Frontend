@@ -1,6 +1,6 @@
 export enum Language {
     Python = 'python',
-    Cpp = 'cpp',
+    Cpp = 'c++',
     C = 'c',
     Java = 'java',
     Plain = 'plain',
