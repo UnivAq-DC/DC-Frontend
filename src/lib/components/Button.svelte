@@ -37,7 +37,7 @@
     .button:hover:not(:disabled){
         filter: brightness(1.1);
     }
-    .fancy:hover:hover:not(:disabled){
+    .fancy:hover:not(:disabled){
         transform: translate(-0.1rem, -0.1rem);
         box-shadow: 0.2rem 0.2rem 0 var(--fancy-color);
     }

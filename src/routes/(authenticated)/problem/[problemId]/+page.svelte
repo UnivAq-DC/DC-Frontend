@@ -14,19 +14,23 @@
 	import { onMount } from "svelte"
 	import { useGetRestApi } from "$lib/useApi"
 	import type { Submitment, UserSubmitment } from "$lib/types/UserSubmitment"
+	import FaDiceD20 from "svelte-icons/fa/FaDiceD20.svelte"
 	import { getApiErrorMessage } from "$lib/utils"
-	//remove the default once done testing
-	let problem = useGetRestApi(api.fetchProblem)
-	$: {
-		if (browser) {
-			problem.fetch($page.params.problemId)
-		}
-	}
+	let problem = useGetRestApi(api.fetchProblem, {
+		onSuccess: (data) => {
+			userSubmitment.isCode = data.isCoding
+			if (data.isCoding) {
+				userSubmitment.language = data.availableLanguages[0] ?? Language.C
+			}
+		},
+	})
+	$: if (browser) problem.fetch($page.params.problemId)
 	let isSubmitting = false
 	let userSubmitment: UserSubmitment = {
 		code: "",
-		language: Language.C,
+		language: Language.Plain,
 		problemId: Number($page.params.problemId),
+		isCode: true,
 	}
 	let userSubimtments = useGetRestApi<Submitment[]>(api.getJson, {
 		onError: () => {
@@ -42,10 +46,11 @@
 
 <AnimatedPage style="position:relative;">
 	{#if $problem.loading}
-		<div class="loading">Loading problem...</div>
+		<div class="loading">Caricamento del problema...</div>
 	{:else if $problem.error || !$problem.data}
-		<div class="error">Error: {$problem.error}</div>
+		<div class="error">Errore: {$problem.error}</div>
 	{:else}
+		
 		<div class="problem-grid">
 			<div class="editor-wrapper">
 				<Editor
@@ -67,7 +72,7 @@
 						style="margin-left: 1rem"
 						bind:value={userSubmitment.language}
 					>
-						{#each $problem.data.languages ?? [] as language (language)}
+						{#each $problem.data.availableLanguages ?? [] as language (language)}
 							<option value={language}>{language}</option>
 						{/each}
 					</Select>
@@ -75,6 +80,7 @@
 				<Button
 					fancy
 					disabled={isSubmitting}
+					style="display:flex; perspective: 1000px;"
 					on:click={async () => {
 						isSubmitting = true
 						const res = await api.submitSubmitment(userSubmitment)
@@ -87,7 +93,14 @@
 						fetchSubmitments()
 					}}
 				>
-					{isSubmitting ? "controllo in corso..." : "Invia"}
+					{#if isSubmitting}
+						Controllo in corso
+						<div class="spin-animation">
+							<FaDiceD20 />
+						</div>
+					{:else}
+						Invia
+					{/if}
 				</Button>
 			</div>
 		</div>
@@ -120,6 +133,28 @@
 		@media (max-width: 920px) {
 			flex: unset;
 			height: 70vh;
+		}
+	}
+	.spin-animation {
+		width: 1rem;
+		height: 1rem;
+		margin-left: 0.6rem;
+		color: var(--accent);
+		animation: spin 1.5s linear infinite;
+	}
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+			scale: 0.8;
+			filter: hue-rotate(0deg);
+		}
+		50% {
+			scale: 1.2;
+		}
+		100% {
+			transform: rotate(360deg);
+			scale: 0.8;
+			filter: hue-rotate(360deg);
 		}
 	}
 	.prompt-wrapper {

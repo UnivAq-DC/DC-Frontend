@@ -10,8 +10,6 @@
 		},
 	})
 	import { logger } from "$lib/stores/toast"
-
-
 </script>
 
 <svelte:head>
@@ -25,12 +23,13 @@
 				<div class="loading">Loading problems...</div>
 			{:else if $problems.error || !$problems.data}
 				<div class="error">Error: {$problems.error}</div>
+			{:else if $problems.data.length === 0}
+				<div class="no-problems">Non ci sono progetti</div>
 			{:else}
 				{#each $problems.data as problem}
 					<ProblemRow {problem} />
 				{/each}
 			{/if}
-
 		</div>
 	</div>
 </AnimatedPage>
@@ -42,11 +41,11 @@
 		padding: 1rem 0;
 		width: fit-content;
 	}
-	.loading{
+	.loading {
 		margin: 1rem;
 	}
-	.error{
-		color: var(--red)
+	.error {
+		color: var(--red);
 	}
 	.problems-content {
 		margin-top: 4rem;

@@ -15,8 +15,7 @@
 	import UserSubmitmentResult from "./UserSubmitmentResult.svelte"
 	import Button from "./Button.svelte"
 	import FaExternalLinkSquareAlt from "svelte-icons/fa/FaExternalLinkSquareAlt.svelte"
-  import { goto } from "$app/navigation"
-  import { isUrl } from "$lib/utils"
+	import { isUrl } from "$lib/utils"
 	export let problem: Problem
 	export let currentMode: EditorMode = EditorMode.Prompt
 	export let userSubmitments: Submitment[] | null = []
@@ -49,7 +48,7 @@
 					<h2 class="problem-title">
 						{problem.name}
 					</h2>
-					<div class="project-description">
+					<div class="problem-description">
 						{problem.description}
 					</div>
 					{#if isUrl(problem.attachment)}
@@ -59,7 +58,7 @@
 									style="width: 2rem; height:2rem; padding: 0.2rem"
 									cssVar="primary"
 									on:click={() => {
-										window.open(problem.attachment, "_blank");
+										window.open(problem.attachment, "_blank")
 									}}
 								>
 									<FaExternalLinkSquareAlt />
@@ -68,7 +67,7 @@
 							<iframe
 								class="pdf-iframe"
 								title="pdf attachment"
-								src={`https://www.africau.edu/images/default/sample.pdf#toolbar=0&view=FitH`}
+								src={`${problem.attachment}#toolbar=0&view=FitH`}
 							/>
 						</div>
 					{:else}
@@ -76,7 +75,7 @@
 							<SvelteMarkdown source={problem.attachment} />
 						</div>
 					{/if}
-					{#if problem.testcaseList}
+					{#if problem.testcaseList && problem.testcaseList.length > 0}
 						<div class="testcases-wrapper column">
 							<h2>Esempi</h2>
 							{#each problem.testcaseList as testcase}
@@ -92,7 +91,7 @@
 					{#if userSubmitments === null}
 						Caricamento...
 					{:else if userSubmitments.length === 0}
-						<div class="no-submitments">Non hai ancora inviato nulla</div>
+						<div class="no-submitments">Nessun risultato inviato</div>
 					{:else}
 						<div class="submitments-wrapper column">
 							{#each userSubmitments as submitment}
@@ -110,7 +109,7 @@
 	.editor-problem {
 		width: 40vw;
 		min-width: 25rem;
-		@media screen and (max-width: 800px) {
+		@media screen and (max-width: 920px) {
 			min-width: unset;
 			width: 100%;
 		}
@@ -138,9 +137,17 @@
 		flex: 1;
 		border-radius: 0.4rem;
 		border: none;
+		@media screen and (max-width: 920px) {
+			height: 50vh;
+		}
 	}
-	.project-description {
+	.problem-description {
+		text-overflow: ellipsis;
 		margin-top: 0.8rem;
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 4;
 		font-size: 0.9rem;
 	}
 	.problem-title {
@@ -150,7 +157,7 @@
 	.tabs-wrapper {
 		display: flex;
 		height: calc(100vh - 2rem);
-		@media screen and (max-width: 800px) {
+		@media screen and (max-width: 920px) {
 			height: unset;
 		}
 	}
@@ -179,5 +186,8 @@
 		margin-top: auto;
 		padding-top: 1rem;
 		gap: 0.4rem;
+	}
+	.no-submitments {
+		margin: 1rem;
 	}
 </style>

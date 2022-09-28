@@ -6,6 +6,7 @@ export type UserSubmitment = {
     code: string
     language: Language
     problemId: number
+    isCode: boolean
 }
 export type Submitment = {
     id: number

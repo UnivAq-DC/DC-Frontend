@@ -1,19 +1,20 @@
 export enum Language {
-    Python = 'Python',
-    Cpp = 'Cpp',
-    C = 'C',
-    Java = 'Java',
-    Plain = 'Plain',
+    Python = 'python',
+    Cpp = 'cpp',
+    C = 'c',
+    Java = 'java',
+    Plain = 'plain',
 }
 export type ProblemPreview = { 
     id: number
     createdAt: string
     updatedAt: string
-    languages: Language[]
+    availableLanguages: Language[]
     name: string
     description: string
     attachment: string
     template?: string
+    isCoding: boolean
 }
 
 export type Problem = ProblemPreview & {

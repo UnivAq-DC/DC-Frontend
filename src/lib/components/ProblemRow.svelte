@@ -12,7 +12,7 @@
 				{problem.name}
 			</div>
 			<div class="row language-row">
-				{#each problem.languages ?? [] as language}
+				{#each problem.availableLanguages ?? [] as language}
 					<LanguageIcon {language} style="width: 1rem; height: 1rem;" />
 				{/each}
 			</div>

@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios"
 import type { Problem, ProblemPreview } from "$lib/types/Problem"
-import type { ErrorLoginResponse, UserLogin, UserLoginResponse, UserMeResponse } from "$lib/types/User"
+import type { ErrorLoginResponse, UserLogin, UserLoginResponse, UserMeResponse, UserRegister, UserRegisterError, UserRegisterResponse } from "$lib/types/User"
 import { axios } from "./axios"
 import type { Submitment, UserSubmitment, UserSubmitmentErrorResponse, UserSubmitmentResponse } from "./types/UserSubmitment"
 import type { ErrorRequest } from "./types/Base"
@@ -88,6 +88,9 @@ export class Api {
     static validationRoute = "users/me"
     checkLogin = async (): Response<UserMeResponse> => {
         return this.getJson(Api.validationRoute, { withCredentials: true })
+    }
+    registerUser = async (data: UserRegister): Response<UserRegisterResponse, ErrorRequest<UserRegisterError>> => {
+        return this.postJson('auth/signup', data)
     }
 }
 
