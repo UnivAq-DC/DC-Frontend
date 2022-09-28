@@ -43,7 +43,13 @@
 	onMount(() => fetchSubmitments())
 	let currentMode: EditorMode = EditorMode.Prompt
 </script>
-
+<title>
+	{#if $problem.loading}
+		Loading problem...
+	{:else}
+		{$problem.data?.name ?? "Problema"}
+	{/if}
+</title>
 <AnimatedPage style="position:relative;">
 	{#if $problem.loading}
 		<div class="loading">Caricamento del problema...</div>

@@ -14,6 +14,9 @@
 	}
 </script>
 
+<title>
+	Accedi
+</title>
 <AnimatedPage cropped>
 	<div class="column login-page">
 		{#if $currentUser.data}
