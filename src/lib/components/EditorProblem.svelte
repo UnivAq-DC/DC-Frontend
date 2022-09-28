@@ -80,7 +80,12 @@
 
 <style lang="scss">
 	.editor-problem {
+		width: 35vw;
 		min-width: 25rem;
+		@media screen and (max-width: 800px) {
+			min-width: unset;	
+			width: 100%;
+		}
 		flex: 1;
 	}
 	.tabs-wrapper {

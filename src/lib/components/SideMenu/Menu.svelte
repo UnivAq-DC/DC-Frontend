@@ -11,7 +11,7 @@ import { theme } from "$lib/stores/theme";
             <FaHome />
         </MenuIcon>
     </a>
-    <a href="/login">
+    <a href="/user">
         <MenuIcon>
             <FaUser />
         </MenuIcon>

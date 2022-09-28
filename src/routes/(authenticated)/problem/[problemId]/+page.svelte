@@ -9,10 +9,12 @@
 		EditorMode,
 	} from "$lib/components/EditorProblem.svelte"
 	import Select from "$lib/components/Select.svelte"
-  import { logger } from "$lib/stores/toast"
+	import { logger } from "$lib/stores/toast"
 	import { Language } from "$lib/types/Problem"
-	import { useGetApi, useGetRestApi } from "$lib/useApi"
-	import type { UserSubmitment } from "$lib/types/UserSubmitment"
+	import { onMount } from "svelte"
+	import { useGetRestApi } from "$lib/useApi"
+	import type { Submitment, UserSubmitment } from "$lib/types/UserSubmitment"
+	import { getApiErrorMessage } from "$lib/utils"
 	//remove the default once done testing
 	let problem = useGetRestApi(api.fetchProblem)
 	$: {
@@ -26,7 +28,15 @@
 		language: Language.C,
 		problemId: Number($page.params.problemId),
 	}
-	let userSubimtments = useGetApi(api.fetchUserSubmitments, {autoFetch: true})
+	let userSubimtments = useGetRestApi<Submitment[]>(api.getJson, {
+		onError: () => {
+			logger.error("Errore nel caricamento dei tuoi risultati, sei loggato?")
+		},
+	})
+	function fetchSubmitments() {
+		userSubimtments.fetch(`problems/${$page.params.problemId}/submitments`)
+	}
+	onMount(() => fetchSubmitments())
 	let currentMode: EditorMode = EditorMode.Prompt
 </script>
 
@@ -44,9 +54,9 @@
 				/>
 			</div>
 			<div class="column prompt-wrapper">
-				<EditorProblem 
-					problem={$problem.data} 
-					bind:currentMode 
+				<EditorProblem
+					problem={$problem.data}
+					bind:currentMode
 					userSubmitments={$userSubimtments.data}
 				/>
 			</div>
@@ -57,26 +67,24 @@
 						style="margin-left: 1rem"
 						bind:value={userSubmitment.language}
 					>
-						<!--
-						{#each problem.languages as language (language)}
+						{#each $problem.data.languages ?? [] as language (language)}
 							<option value={language}>{language}</option>
 						{/each}
-						-->
 					</Select>
 				</div>
-				<Button 
-					fancy 
+				<Button
+					fancy
 					disabled={isSubmitting}
 					on:click={async () => {
 						isSubmitting = true
 						const res = await api.submitSubmitment(userSubmitment)
 						isSubmitting = false
-						if(res.ok){
+						if (res.ok) {
 							currentMode = EditorMode.Submitment
-						}else{
-							logger.error(res.errorData?.message.join(", ") || "Errore generico")
+						} else {
+							logger.error(getApiErrorMessage(res.errorData))
 						}
-						userSubimtments.fetch()
+						fetchSubmitments()
 					}}
 				>
 					{isSubmitting ? "controllo in corso..." : "Invia"}
@@ -101,6 +109,7 @@
 		gap: 1rem;
 		@media (max-width: 920px) {
 			display: flex;
+			height: unset;
 			flex-direction: column;
 		}
 	}
@@ -108,6 +117,10 @@
 		display: flex;
 		flex: 1;
 		grid-area: e;
+		@media (max-width: 920px) {
+			flex: unset;
+			height: 70vh;
+		}
 	}
 	.prompt-wrapper {
 		grid-area: p;

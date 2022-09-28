@@ -260,5 +260,6 @@ export const baseTheme = {
     "editorWhitespace.foreground": "#CDCDCD1A",
     "editorWidget.background": "#1a3e51",
     "input.background": "#2b5f7a",
+    "minimap.background": get(theme).layer('primary', 0.1).hex(),
   }
 }

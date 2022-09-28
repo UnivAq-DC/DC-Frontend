@@ -4,13 +4,12 @@ import createAuthRefreshInterceptor from 'axios-auth-refresh'
 import { user } from './stores/user'
 const API_URL = 'http://localhost:8080/' //ENV???
 import { get } from 'svelte/store'
-import { Api, api } from './api'
+import { Api } from './api'
 //@ts-ignore
 const authInterceptor = createAuthRefreshInterceptor.default || createAuthRefreshInterceptor
 
 
 function authRequestInterceptor(config: AxiosRequestConfig) {
-	if (config.url === 'auth/login') return config
 	const token = get(user).token
     const headers: AxiosRequestHeaders = { ...config.headers }
 	if (token) {

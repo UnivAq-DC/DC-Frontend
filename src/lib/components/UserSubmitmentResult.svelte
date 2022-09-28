@@ -15,7 +15,7 @@
 		</div>
 	</div>
     <div>
-		{submitment.code}
+		Punteggio: {submitment.score}
 	</div>
 </div>
 

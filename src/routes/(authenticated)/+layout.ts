@@ -16,5 +16,5 @@ export async function load() {
     }
     console.log(user)
     console.log("Redirecting to login")
-    throw redirect(302, '/login')
+    throw redirect(302, '/user')
 }

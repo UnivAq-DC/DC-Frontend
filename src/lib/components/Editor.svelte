@@ -12,21 +12,20 @@
 	let editor: monaco.editor.IStandaloneCodeEditor
 	let monacoInstance: MonacoType
 	const toDispose: any[] = []
-	const langMap = {
-		[Language.C]: "c",
-		[Language.Cpp]: "cpp",
-		[Language.Python]: "python",
-		[Language.Java]: "java",
-	}
+	const langMap = new Map([
+		[Language.C, "c"],
+		[Language.Cpp, "cpp"],
+		[Language.Python, "python"],
+		[Language.Java, "java"],
+	])
 
 	onMount(async () => {
 		Monaco.registerLanguages()
 		monacoInstance = await Monaco.get()
 		editor = monacoInstance.editor.create(el, {
 			value: code,
-			language: langMap[language],
+			language: langMap.get(language) ?? language.toString(),
 			theme: "custom-theme",
-			minimap: { enabled: false },
 			scrollbar: {
 				vertical: "auto",
 				horizontal: "hidden",
@@ -64,7 +63,7 @@
 	$: if (monacoInstance?.editor) {
 		monacoInstance.editor.setModelLanguage(
 			editor.getModel()!,
-			langMap[language]
+			langMap.get(language) ?? language.toString()
 		)
 	}
 	$: editor?.updateOptions({ readOnly: disabled })

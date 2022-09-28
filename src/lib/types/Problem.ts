@@ -5,24 +5,18 @@ export enum Language {
     Java = 'Java',
     Plain = 'Plain',
 }
-export interface ProblemPreview{ 
+export type ProblemPreview = { 
     id: number
     createdAt: string
     updatedAt: string
+    languages: Language[]
     name: string
     description: string
     attachment: string
     template?: string
 }
 
-export type Problem = {
-    id: number
-    createdAt: string
-    updatedAt: string
-    name: string
-    description: string
-    attachment: string
-    template?: string
+export type Problem = ProblemPreview & {
     testcaseList?: Testcase[]
 }
 
