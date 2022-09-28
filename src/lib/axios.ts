@@ -2,7 +2,7 @@ import Axios from 'axios'
 import type { AxiosRequestConfig, AxiosRequestHeaders} from 'axios'
 import createAuthRefreshInterceptor from 'axios-auth-refresh'
 import { user } from './stores/user'
-const API_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'http://82.165.238.33:8080/'
+const API_URL = import.meta.env.DEV ? 'http://localhost:8080' : 'https://b642c6b.online-server.cloud'
 import { get } from 'svelte/store'
 import { Api } from './api'
 //@ts-ignore
