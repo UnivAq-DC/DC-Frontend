@@ -13,10 +13,12 @@
 		username: "",
 	}
 </script>
+<svelte:head>
+	<title>
+		Registrati
+	</title>
+</svelte:head>
 
-<title>
-	Registrati
-</title>
 <AnimatedPage cropped>
 	<div class="column register-page">
 		<h1>Register</h1>

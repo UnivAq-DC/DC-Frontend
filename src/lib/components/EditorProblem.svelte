@@ -54,15 +54,14 @@
 					{#if isUrl(problem.attachment)}
 						<div class="pdf-iframe-wrapper">
 							<div class="pdf-iframe-controls row">
-								<Button
-									style="width: 2rem; height:2rem; padding: 0.2rem"
-									cssVar="primary"
-									on:click={() => {
-										window.open(problem.attachment, "_blank")
-									}}
-								>
-									<FaExternalLinkSquareAlt />
-								</Button>
+								<a href={problem.attachment} target="_blank">
+									<Button
+										style="width: 2rem; height:2rem; padding: 0.2rem"
+										cssVar="primary"
+									>
+										<FaExternalLinkSquareAlt />
+									</Button>
+								</a>
 							</div>
 							<iframe
 								class="pdf-iframe"
@@ -95,7 +94,7 @@
 					{:else}
 						<div class="submitments-wrapper column">
 							{#each userSubmitments as submitment}
-								<UserSubmitmentResult {submitment} on:openCode/>
+								<UserSubmitmentResult {submitment} on:openCode />
 							{/each}
 						</div>
 					{/if}

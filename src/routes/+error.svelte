@@ -4,9 +4,12 @@ import Button from "$lib/components/Button.svelte";
 
 </script>
 
-<title>
-    404
-</title>
+<svelte:head>
+    <title>
+        404
+    </title>
+</svelte:head>
+
 <AnimatedPage cropped>
     <div class="column" style="align-items: center; justify-content:center; height: 100%">
         <h1 style="font-size: 4rem;">404</h1>

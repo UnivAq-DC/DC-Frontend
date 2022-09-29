@@ -57,16 +57,18 @@
 		e.returnValue = ""
 		return false
 	}
+
+	let pageTitle = "Problema"
+	$: pageTitle = $problem.data?.name ?? "Problema"
 </script>
 
 <svelte:window on:beforeunload={handleUnload} />
-<title>
-	{#if $problem.loading}
-		Loading problem...
-	{:else}
-		{$problem.data?.name ?? "Problema"}
-	{/if}
-</title>
+<svelte:head>
+	<title>
+		{pageTitle}
+	</title>
+</svelte:head>
+
 <AnimatedPage style="position:relative;">
 	{#if $problem.loading}
 		<div class="loading">Caricamento del problema...</div>

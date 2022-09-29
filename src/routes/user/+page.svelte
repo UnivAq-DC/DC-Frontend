@@ -14,9 +14,12 @@
 	}
 </script>
 
-<title>
-	Accedi
-</title>
+<svelte:head>
+	<title>
+		Accedi
+	</title>
+</svelte:head>
+
 <AnimatedPage cropped>
 	<div class="column login-page">
 		{#if $currentUser.data}
