@@ -62,6 +62,9 @@ public class Main{
     [Language.Python]: 
 `
 def main():
+
+
+main()
 `.trim(),
     [Language.Plain]: ''
 }
